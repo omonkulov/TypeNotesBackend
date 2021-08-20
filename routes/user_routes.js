@@ -54,12 +54,37 @@ router.post("/sign-up", async (req, res) => {
 
 //Sign in
 router.post("/sign-in", async (req, res) => {
-	res.send(error.BadParamsError);
+	//Joi validate Data
+	const loginValidate = loginValidation(req.body);
+	if (loginValidate.error) return res.status(400).send(loginValidate.error.details[0].message);
+
+	//Check if username exists
+	const userExist = await User.findOne({ username: req.body.username });
+	if (!userExist) return res.status(400).send("Username does not exist");
+
+	//Check if password is correct
+	const validPass = await bcrypt.compare(req.body.password, userExist.hashedPassword);
+	if (!validPass) return res.status(400).send("Invalid password");
+
+	//Create and assign a token
+	const token = jwt.sign({ _id: userExist._id }, process.env.TOKEN_SECRET);
+	res.header("auth-token", token).send("logged in");
 });
 
-//Change Password
-router.patch("/change-password", (red, res) => {
-	res.send("Change Password");
+//Check if user already exists
+router.post("/username-taken", async (req, res) => {
+	//Check if username exists
+	const userExist = await User.findOne({ username: req.body.username });
+	if (!userExist) {
+		//Username is not taken
+		return res.send({
+			taken: false,
+		});
+	}
+	//Username is already taken
+	res.send({
+		taken: true,
+	});
 });
 
 module.exports = router;
