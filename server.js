@@ -10,6 +10,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 //Routes
 const userRoute = require("./routes/user_routes");
+const collectionRoute = require("./routes/collections_routes");
 
 //Middleware
 app.use(cors({ exposedHeaders: "auth-token" }));
@@ -22,6 +23,7 @@ app.use(
 
 //Middleware Routes
 app.use("/user", userRoute);
+app.use("/collection", collectionRoute);
 
 //Connect to DB
 const mongooseOptions = {

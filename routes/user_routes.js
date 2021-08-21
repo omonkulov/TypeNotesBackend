@@ -26,28 +26,19 @@ router.post("/sign-up", async (req, res) => {
 	const salt = await bcrypt.genSalt(bcryptSaltRounds);
 	const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-	//Default Collection
-	const collection = new Collection({
-		cards: [{ question: "Something", answer: "Sjos" }],
-	});
-
 	//Create New User Ojb
 	const user = new User({
 		username: req.body.username,
 		hashedPassword: hashedPassword,
-		collections: collection,
 	});
 
 	try {
-		//Try Save to database
-		await collection.save();
 		const savedUser = await user.save();
-		//Generate Token
-		const token = jwt.sign({ _id: savedUser._id }, process.env.TOKEN_SECRET);
+		//Generate Token expires in 4hours
+		const token = jwt.sign({ _id: savedUser._id }, process.env.TOKEN_SECRET, { expiresIn: 14400 });
 		//Set Client's headr auth-token with the jwt token
 		res.header("auth-token", token).send({ id: user._id, username: user.username });
 	} catch (error) {
-		console.log(error);
 		res.status(400).send(error);
 	}
 });
@@ -67,12 +58,12 @@ router.post("/sign-in", async (req, res) => {
 	if (!validPass) return res.status(400).send("Invalid password");
 
 	//Create and assign a token
-	const token = jwt.sign({ _id: userExist._id }, process.env.TOKEN_SECRET);
+	const token = jwt.sign({ _id: userExist._id }, process.env.TOKEN_SECRET, { expiresIn: 14400 });
 	res.header("auth-token", token).send("logged in");
 });
 
 //Check if user already exists
-router.post("/username-taken", async (req, res) => {
+router.post("/istaken", async (req, res) => {
 	//Check if username exists
 	const userExist = await User.findOne({ username: req.body.username });
 	if (!userExist) {

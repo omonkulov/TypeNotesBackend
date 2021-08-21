@@ -20,6 +20,10 @@ const cardSchema = new mongoose.Schema({
 			default: 0,
 		},
 	},
+	numOfWords: {
+		type: Number,
+		required: true,
+	},
 	answer: {
 		type: String,
 		default: "Blank",
@@ -37,7 +41,15 @@ const collectionSchema = new mongoose.Schema(
 			type: String,
 			default: "Unnamed",
 		},
+		desc: {
+			type: String,
+			default: "This collection does not have a description.",
+		},
 		cards: [cardSchema],
+		public: {
+			type: Boolean,
+			default: true,
+		},
 		owner: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: "User",
