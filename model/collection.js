@@ -24,10 +24,10 @@ const cardSchema = new mongoose.Schema({
 			type: Number,
 			default: 0,
 		},
-		timesFinished: {
-			type: Number,
-			default: 0,
-		},
+	},
+	numOfTimesCompleted: {
+		type: Number,
+		default: 0,
 	},
 });
 

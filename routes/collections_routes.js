@@ -21,7 +21,12 @@ router.get("/top/:limit", verify, async (req, res) => {
 	}
 });
 
-//Create Collection
+/**
+ * Create Collection
+ * - title  	Title for the collection
+ * - desc  		Description for the collection
+ * - cards		array of card obj
+ */
 router.post("/create", verify, async (req, res) => {
 	let title = req.body.title;
 	let desc = req.body.desc;
@@ -49,8 +54,23 @@ router.post("/create", verify, async (req, res) => {
 	res.send("");
 });
 
-//Add a card or cards to existing collection
-router.post("/add", verify, async (req, res) => {
+/**
+ * Edit Collection's title or desc
+ * - collectionId  	Collection to edit
+ * - title  		new Title, if not provided keep the old title
+ * - desc  			new Description , if not provided keep the old Description
+ */
+router.post("/edit", verify, async (req, res) => {
+	// TODO
+	const collection = await Collection.findById(req.body.collectionId);
+});
+
+/**
+ * Add a card or cards to existing collection
+ * - collectionId  	Collection to add the card
+ * - card  			Array of cards to add
+ */
+router.post("/cards/add", verify, async (req, res) => {
 	if (!req.body.collectionId) {
 		res.send("No collection Id");
 		return;
@@ -65,20 +85,24 @@ router.post("/add", verify, async (req, res) => {
 	res.send("Found it");
 });
 
-//Remove a card or cards in an existing collection
-router.post("/remove", verify, async (req, res) => {
+/**
+ * Remove a card or cards in an existing collection
+ * - collectionId  	Collection to add the card
+ * - arrofCardsId  	Array of card ids to remove
+ */
+router.post("/cards/remove", verify, async (req, res) => {
 	if (!req.body.collectionID) {
 		res.send("No collection Id");
 		return;
 	}
-	if (!req.body.cardIDs || req.body.cardIDs.length === 0) {
+	if (!req.body.arrofCardsId || req.body.arrofCardsId.length === 0) {
 		res.send("No cards");
 		return;
 	}
 	const collection = await Collection.findById(req.body.collectionID);
 	collection.cards = collection.cards.filter((obj, i) => {
-		console.log(req.body.cardIDs.includes(obj._id + ""));
-		return !req.body.cardIDs.includes(obj._id + "");
+		console.log(req.body.arrofCardsId.includes(obj._id + ""));
+		return !req.body.arrofCardsId.includes(obj._id + "");
 	});
 
 	await collection.save();
@@ -86,9 +110,17 @@ router.post("/remove", verify, async (req, res) => {
 });
 
 //Edit card
-router.post("/edit", async (req, res) => {
-	const collection = await Collection.findById(req.body.collectionID);
-	const index = collection.cards.findIndex((obj) => obj._id + "" === req.body.cardID);
+/**
+ * Edit a card
+ * - collectionId  	Collection that contains the edit card
+ * - cardId  		Card Id to edit
+ * - question		Card's question
+ * - answer			Card's answer
+ */
+router.post("/card/edit", async (req, res) => {
+	// TODO conditional answer or question
+	const collection = await Collection.findById(req.body.collectionId);
+	const index = collection.cards.findIndex((obj) => obj._id + "" === req.body.cardId);
 	let test = collection.cards[index];
 	test.answer = req.body.answer;
 	test.question = req.body.question;
@@ -99,13 +131,19 @@ router.post("/edit", async (req, res) => {
 
 module.exports = router;
 
-/**
- * - Search Collection
- * - Create Collection
- * - Edit Collection
- * - Add Flashcard
- * - Edit Flashcard
- * - Delete Collection
- * - NewBest collection
- * -  TODO: REMOVE numOfWords
+/**  General
+ * TODO: Assign the number of words when the cards are added.
+ * This way cron can be added later to calculate the number of words created in total for front page
+ */
+
+/**  Collection
+ * - Delete
+ * - Upvoate
+ * - Downvote
+ * - Public
+ */
+
+/**  Flashcard
+ * - Best Update
+ * - numOfTimesCompleted Update
  */
