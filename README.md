@@ -1,17 +1,17 @@
 ## Description
 
-Backend for the Typenote application. Uses MongoDB for the database, and mongoose for connection. Express web framework for handling requests. Currently, I have no plans to expose any end points to the public. Every post method should be JSON.
-
 ---
 
+Backend for the Typenote application. Uses MongoDB for the database, and mongoose for connection. Express web framework for handling requests. Currently, I have no plans to expose any end points to the public. Every post method should be JSON.
+
 ## Authentication
+
+---
 
 For authentication there are two end points
 
 -   Creating a new account: `/user/sign-up`
 -   Signing an existing user: `/user/sign-in`
-
----
 
 #### Sign-up
 
@@ -37,8 +37,6 @@ SUCCESS:
 
 -   If successful, express will set header with key "auth-token" and value as generated and signed JSON Web token.
 
----
-
 #### Sign-In
 
 For logging or signing with an existing account, `/user/sign-in` path should be used.
@@ -59,9 +57,9 @@ ERRORS:
 -   `Username does not exist`
 -   `Invalid password`
 
----
-
 ## Authorization
+
+---
 
 Every request should be send with "auth-token" header with valid token. Otherwise `Invalid token` error is sent.
 
@@ -69,9 +67,9 @@ Every request should be send with "auth-token" header with valid token. Otherwis
 curl POST --header "auth-token: <token>" ....
 ```
 
----
-
 ## Collection
+
+---
 
 Collections are basically array of flashcards that users can type out.
 
@@ -143,8 +141,6 @@ Mongoose cardSchema:
 	},
 }
 ```
-
----
 
 #### Get top _x_ of collections
 
