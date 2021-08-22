@@ -150,5 +150,5 @@ Method: **GET**
 Format:
 
 ```js
-.../collection/top/10  //To get top 10
+.../collection/top/10  //To get top 10 by votes
 ```
