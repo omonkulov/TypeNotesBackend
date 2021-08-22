@@ -21,11 +21,6 @@ router.get("/top/:limit", verify, async (req, res) => {
 	}
 });
 
-//Search Collection
-router.post("/search", verify, async (req, res) => {
-	res.send("Nice");
-});
-
 //Create Collection
 router.post("/create", verify, async (req, res) => {
 	let title = req.body.title;

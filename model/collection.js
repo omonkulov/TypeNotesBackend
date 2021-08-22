@@ -6,6 +6,15 @@ const cardSchema = new mongoose.Schema({
 		default: "Untitled",
 		require: true,
 	},
+	answer: {
+		type: String,
+		default: "Blank",
+		require: true,
+	},
+	numOfWords: {
+		type: Number,
+		required: true,
+	},
 	best: {
 		wpm: {
 			type: Number,
@@ -19,15 +28,6 @@ const cardSchema = new mongoose.Schema({
 			type: Number,
 			default: 0,
 		},
-	},
-	numOfWords: {
-		type: Number,
-		required: true,
-	},
-	answer: {
-		type: String,
-		default: "Blank",
-		require: true,
 	},
 });
 
