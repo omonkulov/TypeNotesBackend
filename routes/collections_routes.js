@@ -42,6 +42,15 @@ router.post("/create", verify, async (req, res) => {
 		res.status(400).send("user does not exist");
 		return;
 	}
+	if (cards && cards.length > 0) {
+		cards = cards.map((obj) => {
+			return {
+				question: obj.question,
+				answer: obj.answer,
+				numOfWords: obj.answer.split(" ").length,
+			};
+		});
+	}
 	const collection = new Collection({
 		title: title,
 		desc: desc ? desc : "This collection does not have a description.",
@@ -61,8 +70,31 @@ router.post("/create", verify, async (req, res) => {
  * - desc  			new Description , if not provided keep the old Description
  */
 router.post("/edit", verify, async (req, res) => {
-	// TODO
-	const collection = await Collection.findById(req.body.collectionId);
+	if (isIdInvalidFormat(req.body.collectionId)) {
+		req.status(400).send(
+			"collection id is not in correct format, should be something like: 61207f8b95e5dbdb1303a4ex"
+		);
+		return;
+	}
+	try {
+		const collection = await Collection.findById(req.body.collectionId).then(() => {
+			console.log("Worked");
+		});
+		const newTitle = req.body.title;
+		const newDesc = req.body.desc;
+		if (collection) {
+			collection.title = newTitle ? newTitle : collection.title;
+			collection.desc = newDesc ? newDesc : collection.desc;
+			collection.save();
+			res.send(collection);
+			return;
+		} else {
+			res.status(400).send("Collection ID is not found");
+		}
+	} catch (error) {
+		console.log(error);
+		res.status(400).send("Edit" + error);
+	}
 });
 
 /**
@@ -147,3 +179,9 @@ module.exports = router;
  * - Best Update
  * - numOfTimesCompleted Update
  */
+function isIdInvalidFormat(id) {
+	if (id.match(/^[0-9a-fA-F]{24}$/)) {
+		return false;
+	}
+	return true;
+}
