@@ -144,7 +144,8 @@ Mongoose cardSchema:
 
 #### Get top _x_ of collections
 
-To get top voted collections , `/collection/top/:limit` path should be used.
+To get top voted collections , 
+`/collection/top/:limit` path should be used.
 
 Method: **GET**
 Format:
